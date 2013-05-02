@@ -66,7 +66,7 @@ ENDIF()
 INCLUDE( CMakeMacros )
 
 include( FindOSGHelper )
-include( FindBulletHelper )
+#include( FindBulletHelper )
 
 FIND_PACKAGE( osgWorks 2.0.0 REQUIRED )
 if( osgWorks_FOUND )
@@ -267,3 +267,7 @@ configure_file(extra/osgbullet.fpc.in
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lib/flagpoll/osgbullet.fpc
         DESTINATION lib/flagpoll )
+
+# Install catkin package.xml
+install(FILES package.xml DESTINATION share/uwsim_osgbullet)
+
