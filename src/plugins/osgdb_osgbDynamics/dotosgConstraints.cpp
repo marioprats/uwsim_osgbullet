@@ -18,6 +18,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <BulletDynamics/ConstraintSolver/btContactConstraint.h>
 #include <osgbDynamics/Constraints.h>
 #include "dotosgMatrixIO.h"
 

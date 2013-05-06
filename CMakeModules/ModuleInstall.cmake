@@ -2,7 +2,7 @@
 # ${LIB_NAME}
 # ${LIB_PUBLIC_HEADERS}
 
-SET(INSTALL_INCDIR include)
+SET(INSTALL_INCDIR include/uwsim_osgbullet)
 SET(INSTALL_BINDIR bin)
 IF(WIN32)
     SET(INSTALL_LIBDIR bin)

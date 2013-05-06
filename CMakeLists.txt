@@ -1,6 +1,6 @@
 # # # # # #  project setup  # # # # # #
 cmake_minimum_required( VERSION 2.8 )
-project( osgBullet )
+project( uwsim_osgbullet )
 
 # Please keep in sync with Version.h
 set( OSGBULLET_VERSION 2.00.02 )
@@ -27,9 +27,10 @@ ENDIF( WIN32 AND MSVC )
 INCLUDE( CMakeMacros )
 
 include( FindOSGHelper )
-include( FindBulletHelper )
+#include( FindBulletHelper )
 
-FIND_PACKAGE( OSGWorks REQUIRED )
+FIND_PACKAGE( uwsim_bullet REQUIRED )
+FIND_PACKAGE( uwsim_osgworks REQUIRED )
 
 
 # OSGBULLET_USE_DOUBLE_PRECISION gets set to TRUE or FALSE in FindBulletHelper.cmake.
@@ -59,6 +60,11 @@ INCLUDE_DIRECTORIES(
     ${OSGBULLET_P5_INCLUDE_DIR}
 )
 
+message(STATUS "CMAKE_PREFIX_PATH= $ENV{CMAKE_PREFIX_PATH}")
+message(STATUS "LD_LIBRARY_PATH= $ENV{LD_LIBRARY_PATH}")
+message(STATUS "CMAKE_MODULE_PATH= ${CMAKE_MODULE_PATH}")
+message(STATUS "OSGWORKS_INCLUDE_DIR = ${OSGWORKS_INCLUDE_DIR}")
+message(STATUS "BULLET_INCLUDE_DIRS= ${BULLET_INCLUDE_DIRS}")
 
 # Support for collision-only (no dynamics)
 if( BULLET_DYNAMICS_FOUND )
@@ -74,12 +80,12 @@ endif()
 
 
 
-OPTION( OSGBULLET_BUILD_APPLICATIONS "Enable to build applications" ON )
+OPTION( OSGBULLET_BUILD_APPLICATIONS "Enable to build applications" OFF )
 IF( OSGBULLET_BUILD_APPLICATIONS )
     ADD_SUBDIRECTORY( applications )
 ENDIF( OSGBULLET_BUILD_APPLICATIONS )
 
-OPTION( OSGBULLET_BUILD_EXAMPLES "Enable to build example code" ON )
+OPTION( OSGBULLET_BUILD_EXAMPLES "Enable to build example code" OFF )
 IF( OSGBULLET_BUILD_EXAMPLES )
     ADD_SUBDIRECTORY( examples )
 ENDIF( OSGBULLET_BUILD_EXAMPLES )
@@ -90,7 +96,7 @@ if( OSGBULLET_BUILD_TESTS )
     add_subdirectory( tests )
 endif()
 
-option( OSGBULLET_INSTALL_DATA "Enable to add the data directory to the install target" ON )
+option( OSGBULLET_INSTALL_DATA "Enable to add the data directory to the install target" OFF )
 if( OSGBULLET_INSTALL_DATA )
     add_subdirectory( data )
 endif()
@@ -128,3 +134,20 @@ if(MSVC)
         FILES_MATCHING PATTERN "*.pdb"
     )
 endif(MSVC)
+
+include( CMakePackageConfigHelpers )
+# Create the osgWorksConfig.cmake and osgWorksConfigVersion files
+file(RELATIVE_PATH CONF_REL_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/lib"
+   "${CMAKE_INSTALL_PREFIX}/include")
+
+configure_package_config_file( 
+    osgBulletConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/lib/${CMAKE_PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION lib
+    PATH_VARS CONF_REL_INCLUDE_DIR )
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/lib/${CMAKE_PROJECT_NAME}Config.cmake 
+        DESTINATION share/${CMAKE_PROJECT_NAME} )
+
+# Install catkin package.xml
+install(FILES package.xml DESTINATION share/${CMAKE_PROJECT_NAME})
+
